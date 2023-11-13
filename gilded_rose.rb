@@ -11,6 +11,9 @@ def update_quality(items)
       item.quality = 0 if item.sell_in <= 0
     when 'Sulfuras, Hand of Ragnaros'
       next
+    when 'Conjured Mana Cake'
+      item.quality -= 2
+      item.quality -= 2 if item.sell_in <= 0
     else
       item.quality -= 1
       item.quality -= 1 if item.sell_in <= 0
