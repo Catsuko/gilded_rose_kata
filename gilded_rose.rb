@@ -1,20 +1,24 @@
 def update_quality(items)
   items.each do |item|
-    quality_change = item.sell_in > 0 ? 1 : 2
+    before_sell_date = item.sell_in.positive?
+    rate = before_sell_date ? 1 : 2
 
     case item.name
     when 'Aged Brie'
-      item.quality += quality_change
+      item.quality += rate
     when 'Backstage passes to a TAFKAL80ETC concert'
-      item.quality += 1
-      item.quality += 1 if item.sell_in <= 10
-      item.quality += 1 if item.sell_in <= 5
-      item.quality = 0 if item.sell_in <= 0
+      if before_sell_date
+        item.quality += 1
+        item.quality += 1 if item.sell_in <= 10
+        item.quality += 1 if item.sell_in <= 5
+      else
+        item.quality = 0
+      end
     when 'Sulfuras, Hand of Ragnaros'
       next
     else
-      quality_change *= 2 if item.name.match?(/\AConjured\s/)
-      item.quality -= quality_change
+      rate *= 2 if item.name.match?(/\AConjured\s/)
+      item.quality -= rate
     end
 
     item.quality = item.quality.clamp(0, 50)
